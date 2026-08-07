@@ -1,0 +1,18 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.17.0
+2 info using node@v24.19.0
+3 silly config load:file:C:\Program Files\nodejs\node_modules\npm\npmrc
+4 silly config load:file:C:\Users\afifa\family-chart-master\.npmrc
+5 silly config load:file:C:\Users\afifa\family-chart-master\tmp\npmrc_user
+6 silly config load:file:C:\Users\afifa\family-chart-master\tmp\npmrc_global
+7 verbose title npm install rollup
+8 verbose argv "install" "rollup" "--no-fund" "--no-audit"
+9 verbose logfile logs-max:10 dir:C:\Users\afifa\family-chart-master\tmp\npm-cache\_logs\2026-08-07T18_06_45_725Z-
+10 verbose logfile C:\Users\afifa\family-chart-master\tmp\npm-cache\_logs\2026-08-07T18_06_45_725Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:2348810240 maxSize:587202560 maxEntrySize:293601280
+13 silly idealTree buildDeps
+14 silly fetch manifest d3@7.9.0
+15 silly packumentCache full:https://registry.npmjs.org/d3 cache-miss
+16 http fetch GET https://registry.npmjs.org/d3 attempt 1 failed with EACCES
+17 http fetch GET https://registry.npmjs.org/d3 attempt 2 failed with EACCES

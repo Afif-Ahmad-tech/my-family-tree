@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<head>
+  <script src="https://unpkg.com/d3@7"></script>
+  <link rel="stylesheet" href="https://unpkg.com/family-chart@latest/dist/styles/family-chart.css">
+  <script type="module" src="https://unpkg.com/family-chart@latest"></script>
+</head>
+<body>
+<div id="FamilyChart" class="f3" style="width:100%;height:900px;margin:auto;background-color:rgb(33,33,33);color:#fff;"></div>
+<script type="module">
+
+// Your family tree data
+const data = [
+  {
+    "id": "1",
+    "data": {"first name": "John", "last name": "Doe", "birthday": "1980", "gender": "M"},
+    "rels": {"spouses": ["2"], "children": ["3"]}
+  },
+  {
+    "id": "2",
+    "data": {"first name": "Jane", "last name": "Doe", "birthday": "1982", "gender": "F"},
+    "rels": {"spouses": ["1"], "children": ["3"]}
+  },
+  {
+    "id": "3",
+    "data": {"first name": "Bob", "last name": "Doe", "birthday": "2005", "gender": "M"},
+    "rels": {"parents": ["1", "2"]}
+  }
+]
+
+const f3Chart = f3.createChart('#FamilyChart', data)
+
+f3Chart.setCardHtml()
+  .setCardDisplay([["first name","last name"],["birthday"]])
+
+f3Chart.updateTree({initial: true})
+</script>
+</body>
+</html>
