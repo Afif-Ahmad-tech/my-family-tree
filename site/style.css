@@ -1,0 +1,976 @@
+:root {
+    --bg: #080d13;
+    --panel: #0d141d;
+    --panel-2: #111a24;
+    --border: #1d2936;
+    --text: #f1f5f9;
+    --muted: #8190a3;
+    --accent: #78b7ff;
+    --accent-soft: rgba(120, 183, 255, 0.12);
+    --danger: #ff7070;
+    --header-height: 76px;
+    --sidebar-width: 260px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background:
+        radial-gradient(
+            circle at 65% 35%,
+            rgba(40, 82, 120, 0.12),
+            transparent 35%
+        ),
+        var(--bg);
+
+    color: var(--text);
+
+    font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    overflow: hidden;
+}
+
+/* -------------------------------------------------------
+   TOPBAR
+------------------------------------------------------- */
+
+.topbar {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: var(--header-height);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 22px;
+
+    background: rgba(8, 13, 19, 0.94);
+
+    border-bottom: 1px solid var(--border);
+
+    backdrop-filter: blur(16px);
+
+    z-index: 1000;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+
+    min-width: 0;
+
+    gap: 12px;
+}
+
+.brand-icon {
+    width: 42px;
+    height: 42px;
+
+    display: grid;
+    place-items: center;
+
+    flex: 0 0 42px;
+
+    background: #172230;
+
+    border: 1px solid var(--border);
+
+    border-radius: 11px;
+
+    font-size: 22px;
+}
+
+.brand-text {
+    min-width: 0;
+}
+
+.brand-text h1 {
+    margin: 0;
+
+    font-size: 17px;
+    line-height: 20px;
+
+    font-weight: 700;
+}
+
+.brand-text span {
+    display: block;
+
+    margin-top: 2px;
+
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+/* -------------------------------------------------------
+   TOOLBAR
+------------------------------------------------------- */
+
+.toolbar {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+}
+
+.toolbar-button {
+    border: 1px solid var(--border);
+
+    background: #111820;
+
+    color: var(--text);
+
+    min-height: 38px;
+
+    padding: 0 14px;
+
+    border-radius: 9px;
+
+    font-size: 13px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.18s ease,
+        border-color 0.18s ease,
+        transform 0.18s ease;
+}
+
+.toolbar-button:hover {
+    background: #19232e;
+
+    border-color: #304154;
+
+    transform: translateY(-1px);
+}
+
+.toolbar-button:active {
+    transform: translateY(0);
+}
+
+.mobile-menu {
+    display: none;
+
+    width: 40px;
+    height: 40px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 9px;
+
+    background: var(--panel-2);
+
+    color: var(--text);
+
+    cursor: pointer;
+
+    font-size: 18px;
+}
+
+/* -------------------------------------------------------
+   LAYOUT
+------------------------------------------------------- */
+
+.app-layout {
+    position: fixed;
+
+    top: var(--header-height);
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    display: flex;
+
+    min-height: 0;
+}
+
+/* -------------------------------------------------------
+   SIDEBAR
+------------------------------------------------------- */
+
+.sidebar {
+    width: var(--sidebar-width);
+
+    flex: 0 0 var(--sidebar-width);
+
+    height: 100%;
+
+    padding: 26px 16px;
+
+    overflow-y: auto;
+
+    background: #0c131b;
+
+    border-right: 1px solid var(--border);
+
+    z-index: 900;
+}
+
+.sidebar-section {
+    margin-bottom: 28px;
+}
+
+.sidebar-title {
+    margin: 0 0 12px;
+
+    color: #738399;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.12em;
+}
+
+.sidebar-card {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+
+    padding: 16px;
+
+    background: #111a24;
+
+    border: 1px solid var(--border);
+
+    border-radius: 11px;
+}
+
+.sidebar-card strong {
+    font-size: 14px;
+}
+
+.sidebar-card span {
+    color: var(--muted);
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
+
+.sidebar-item {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 10px 12px;
+
+    margin-bottom: 4px;
+
+    border: 1px solid transparent;
+
+    border-radius: 8px;
+
+    background: transparent;
+
+    color: #aab7c7;
+
+    text-align: left;
+
+    font-size: 13px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.18s ease,
+        color 0.18s ease,
+        border-color 0.18s ease;
+}
+
+.sidebar-item:hover {
+    background: #151f2a;
+
+    color: var(--text);
+}
+
+.sidebar-item.active {
+    background: var(--accent-soft);
+
+    border-color: rgba(120, 183, 255, 0.15);
+
+    color: #cfe6ff;
+}
+
+/* -------------------------------------------------------
+   WORKSPACE
+------------------------------------------------------- */
+
+.workspace {
+    position: relative;
+
+    flex: 1 1 auto;
+
+    min-width: 0;
+    min-height: 0;
+
+    overflow: hidden;
+}
+
+.workspace-header {
+    position: absolute;
+
+    top: 18px;
+    left: 20px;
+    right: 20px;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    pointer-events: none;
+
+    z-index: 10;
+}
+
+.workspace-kicker {
+    display: inline-block;
+
+    padding: 7px 11px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 8px;
+
+    background: rgba(13, 20, 29, 0.85);
+
+    color: #91a1b5;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.1em;
+}
+
+.workspace-header h2 {
+    margin: 9px 0 0;
+
+    font-size: 20px;
+
+    opacity: 0.95;
+}
+
+.workspace-help {
+    padding: 9px 12px;
+
+    color: #718196;
+
+    font-size: 11px;
+
+    background: rgba(13, 20, 29, 0.75);
+
+    border: 1px solid var(--border);
+
+    border-radius: 8px;
+}
+
+/* -------------------------------------------------------
+   FAMILY CHART
+------------------------------------------------------- */
+
+.family-chart {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    min-width: 0;
+    min-height: 0;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(38, 67, 94, 0.07),
+            transparent 50%
+        );
+}
+
+/*
+   Family Chart expects its container to have a real
+   width and height. These rules are intentionally
+   stronger than the library's default sizing.
+*/
+
+#FamilyChart {
+    width: 100% !important;
+    height: 100% !important;
+
+    max-width: none !important;
+    max-height: none !important;
+
+    margin: 0 !important;
+}
+
+/* -------------------------------------------------------
+   FOOTER
+------------------------------------------------------- */
+
+.footer {
+    position: fixed;
+
+    left: calc(
+        var(--sidebar-width) + 20px
+    );
+
+    right: 20px;
+
+    bottom: 8px;
+
+    display: flex;
+    justify-content: center;
+
+    gap: 8px;
+
+    color: #566578;
+
+    font-size: 10px;
+
+    pointer-events: none;
+
+    z-index: 20;
+}
+
+/* -------------------------------------------------------
+   MODAL
+------------------------------------------------------- */
+
+.modal-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    display: grid;
+    place-items: center;
+
+    padding: 20px;
+
+    background: rgba(2, 6, 10, 0.72);
+
+    backdrop-filter: blur(8px);
+
+    z-index: 2000;
+}
+
+.modal {
+    width: min(620px, 100%);
+
+    max-height: min(720px, 90vh);
+
+    display: flex;
+    flex-direction: column;
+
+    background: #0e161f;
+
+    border: 1px solid #253342;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.55);
+
+    overflow: hidden;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 18px 20px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.modal-header h2 {
+    margin: 0;
+
+    font-size: 18px;
+}
+
+.modal-close {
+    width: 34px;
+    height: 34px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 8px;
+
+    background: #151f29;
+
+    color: var(--text);
+
+    cursor: pointer;
+
+    font-size: 20px;
+}
+
+.modal-body {
+    padding: 18px;
+
+    overflow-y: auto;
+}
+
+/* -------------------------------------------------------
+   PEOPLE
+------------------------------------------------------- */
+
+.people-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.person-row {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 12px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    background: #111a24;
+
+    color: var(--text);
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        background 0.18s ease,
+        border-color 0.18s ease;
+}
+
+.person-row:hover {
+    background: #17222d;
+
+    border-color: #344556;
+}
+
+.person-avatar {
+    width: 38px;
+    height: 38px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 9px;
+
+    background: #1a2734;
+
+    font-size: 20px;
+}
+
+.person-info {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+
+    min-width: 0;
+}
+
+.person-info strong {
+    font-size: 13px;
+}
+
+.person-info span {
+    color: var(--muted);
+
+    font-size: 11px;
+}
+
+.person-arrow {
+    margin-left: auto;
+
+    color: #708095;
+
+    font-size: 22px;
+}
+
+/* -------------------------------------------------------
+   DETAILS
+------------------------------------------------------- */
+
+.person-details {
+    display: flex;
+    flex-direction: column;
+
+    gap: 14px;
+}
+
+.detail-card {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+
+    padding: 13px;
+
+    background: #111a24;
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+}
+
+.detail-card span {
+    color: var(--muted);
+
+    font-size: 11px;
+}
+
+.detail-card strong {
+    font-size: 14px;
+}
+
+.person-details h3 {
+    margin: 8px 0 0;
+
+    font-size: 14px;
+}
+
+/* -------------------------------------------------------
+   RELATIONSHIPS
+------------------------------------------------------- */
+
+.relationships-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.relationship-card {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        auto
+        minmax(0, 1fr);
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 14px;
+
+    background: #111a24;
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+}
+
+.relationship-person {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    min-width: 0;
+}
+
+.relationship-person strong {
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+    font-size: 12px;
+}
+
+.relationship-type {
+    padding: 5px 8px;
+
+    border-radius: 6px;
+
+    background: var(--accent-soft);
+
+    color: #9dccff;
+
+    font-size: 10px;
+
+    white-space: nowrap;
+}
+
+.relationship-row {
+    display: flex;
+    justify-content: space-between;
+
+    padding: 10px 0;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.relationship-row span {
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+.relationship-row strong {
+    font-size: 12px;
+}
+
+.empty-state {
+    padding: 30px 10px;
+
+    color: var(--muted);
+
+    text-align: center;
+
+    font-size: 13px;
+}
+
+/* -------------------------------------------------------
+   MOBILE
+------------------------------------------------------- */
+
+.sidebar-overlay {
+    display: none;
+}
+
+@media (max-width: 800px) {
+
+    :root {
+        --header-height: 64px;
+    }
+
+    body {
+        overflow: hidden;
+    }
+
+    .topbar {
+        padding: 0 12px;
+    }
+
+    .mobile-menu {
+        display: block;
+    }
+
+    .brand-icon {
+        display: none;
+    }
+
+    .brand {
+        gap: 9px;
+    }
+
+    .brand-text h1 {
+        font-size: 15px;
+    }
+
+    .brand-text span {
+        display: none;
+    }
+
+    .toolbar {
+        gap: 5px;
+    }
+
+    .toolbar-button {
+        width: 38px;
+
+        padding: 0;
+
+        font-size: 16px;
+    }
+
+    .toolbar-button span {
+        display: none;
+    }
+
+    .sidebar {
+        position: fixed;
+
+        top: var(--header-height);
+        left: 0;
+        bottom: 0;
+
+        width: min(
+            280px,
+            85vw
+        );
+
+        transform: translateX(-105%);
+
+        transition:
+            transform 0.25s ease;
+
+        box-shadow:
+            20px 0 50px rgba(0, 0, 0, 0.3);
+    }
+
+    .sidebar.sidebar-open {
+        transform: translateX(0);
+    }
+
+    .sidebar-overlay {
+        position: fixed;
+
+        inset: var(--header-height) 0 0 0;
+
+        display: block;
+
+        background: rgba(0, 0, 0, 0.55);
+
+        opacity: 0;
+
+        pointer-events: none;
+
+        transition: opacity 0.25s ease;
+
+        z-index: 850;
+    }
+
+    .sidebar-overlay.overlay-visible {
+        opacity: 1;
+
+        pointer-events: auto;
+    }
+
+    .app-layout {
+        top: var(--header-height);
+    }
+
+    .workspace {
+        width: 100%;
+    }
+
+    .workspace-header {
+        top: 12px;
+        left: 12px;
+        right: 12px;
+    }
+
+    .workspace-header h2 {
+        display: none;
+    }
+
+    .workspace-help {
+        display: none;
+    }
+
+    .workspace-kicker {
+        font-size: 9px;
+    }
+
+    .footer {
+        left: 10px;
+        right: 10px;
+    }
+
+    .relationship-card {
+        grid-template-columns: 1fr;
+    }
+
+    .relationship-type {
+        justify-self: start;
+    }
+
+}
+
+/* -------------------------------------------------------
+   SMALL PHONES
+------------------------------------------------------- */
+
+@media (max-width: 480px) {
+
+    .toolbar-button {
+        width: 34px;
+        min-height: 34px;
+    }
+
+    .brand-text h1 {
+        font-size: 14px;
+    }
+
+    .modal-overlay {
+        padding: 10px;
+    }
+
+    .modal {
+        max-height: 94vh;
+
+        border-radius: 13px;
+    }
+
+    .modal-header {
+        padding: 14px;
+    }
+
+    .modal-body {
+        padding: 12px;
+    }
+
+}
+/* Family Chart integration */
+.f3.family-chart {
+    position: absolute;
+    inset: 0;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    min-width: 0;
+    min-height: 0;
+
+    background: transparent;
+
+    color: #ffffff;
+}
+
+.f3.family-chart #f3Canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.f3.family-chart svg.main_svg {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.f3.family-chart #htmlSvg {
+    width: 100% !important;
+    height: 100% !important;
+}

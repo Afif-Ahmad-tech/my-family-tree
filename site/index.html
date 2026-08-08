@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#0b1017"
+    >
+
+    <title>Family Tree</title>
+
+    <link
+        rel="stylesheet"
+        href="./assets/family-chart.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="./style.css"
+    >
+
+</head>
+
+<body>
+
+    <header class="topbar">
+
+        <div class="brand">
+
+            <button
+                class="mobile-menu"
+                id="menuBtn"
+                aria-label="Open menu"
+            >
+                ☰
+            </button>
+
+            <div class="brand-icon">
+                🌳
+            </div>
+
+            <div class="brand-text">
+                <h1>Family Tree</h1>
+                <span>
+                    Explore your family history
+                </span>
+            </div>
+
+        </div>
+
+        <div class="toolbar">
+
+            <button
+                class="toolbar-button"
+                id="resetBtn"
+            >
+                ↻ <span>Reset</span>
+            </button>
+
+            <button
+                class="toolbar-button"
+                id="exportBtn"
+            >
+                ↓ <span>Export</span>
+            </button>
+
+            <button
+                class="toolbar-button"
+                id="importBtn"
+            >
+                ↑ <span>Import</span>
+            </button>
+
+            <input
+                type="file"
+                id="importInput"
+                accept=".json,application/json"
+                hidden
+            >
+
+        </div>
+
+    </header>
+
+
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+    ></div>
+
+
+    <main class="app-layout">
+
+        <aside class="sidebar">
+
+            <section class="sidebar-section">
+
+                <h2 class="sidebar-title">
+                    FAMILY HISTORY
+                </h2>
+
+                <div class="sidebar-card">
+
+                    <strong>
+                        Your Family
+                    </strong>
+
+                    <span>
+                        Explore generations,
+                        relationships and
+                        family connections.
+                    </span>
+
+                </div>
+
+            </section>
+
+
+            <section class="sidebar-section">
+
+                <h2 class="sidebar-title">
+                    NAVIGATION
+                </h2>
+
+                <button
+                    class="sidebar-item active"
+                    id="navFamily"
+                >
+                    🌳
+                    <span>Family tree</span>
+                </button>
+
+                <button
+                    class="sidebar-item"
+                    id="navPeople"
+                >
+                    👤
+                    <span>People</span>
+                </button>
+
+                <button
+                    class="sidebar-item"
+                    id="navRelationships"
+                >
+                    👨‍👩‍👧
+                    <span>Relationships</span>
+                </button>
+
+            </section>
+
+
+            <section class="sidebar-section">
+
+                <h2 class="sidebar-title">
+                    ACTIONS
+                </h2>
+
+                <button
+                    class="sidebar-item"
+                    id="sidebarReset"
+                >
+                    ↻
+                    <span>Reset view</span>
+                </button>
+
+            </section>
+
+        </aside>
+
+
+        <section class="workspace">
+
+            <div class="workspace-header">
+
+                <div>
+                    <span class="workspace-kicker">
+                        FAMILY TREE
+                    </span>
+
+                    <h2>
+                        Your family story
+                    </h2>
+                </div>
+
+                <div class="workspace-help">
+                    Drag to move · Scroll to zoom
+                </div>
+
+            </div>
+
+
+            <div
+                id="FamilyChart"
+                class="f3 family-chart"
+            ></div>
+
+        </section>
+
+    </main>
+
+
+    <footer class="footer">
+        <span>Family Tree</span>
+        <span>•</span>
+        <span>Powered by Family Chart</span>
+    </footer>
+
+
+    <!-- Dependencies -->
+    <script src="./assets/d3.min.js"></script>
+
+    <script src="./assets/family-chart.min.js"></script>
+
+    <script src="./app.js"></script>
+
+</body>
+
+</html>
