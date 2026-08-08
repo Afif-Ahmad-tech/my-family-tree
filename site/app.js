@@ -139,20 +139,15 @@ const card = chart
     ])
     .setCardImageField("image");
 
-card.setOnCardClick((event, datum) => {
-    if (!datum || !datum.data) return;
+/*
+ * Family Chart's EditTree is responsible for the actual
+ * add/edit/delete/relationship operations.
+ *
+ * The editor is connected to our card through
+ * setCardClickOpen(card).
+ */
 
-    const firstName = datum.data["first name"] || "";
-    const lastName = datum.data["last name"] || "";
-
-    showPerson(datum.id);
-
-    console.log(
-        `Selected person: ${firstName} ${lastName}`
-    );
-});
-
-chart
+const editTree = chart
     .editTree()
     .setFields([
         "first name",
@@ -160,6 +155,35 @@ chart
         "birthday",
         "gender"
     ]);
+
+if (typeof editTree.setCardClickOpen === "function") {
+    editTree.setCardClickOpen(card);
+}
+
+/*
+ * Keep our local copy synchronized when EditTree exposes
+ * a change callback.
+ */
+
+if (typeof editTree.setOnChange === "function") {
+    editTree.setOnChange(() => {
+        try {
+            if (typeof editTree.exportData === "function") {
+                const exported = editTree.exportData();
+
+                if (Array.isArray(exported)) {
+                    data = exported;
+                    saveData(data);
+                }
+            }
+        } catch (error) {
+            console.error(
+                "Could not synchronize edited family data:",
+                error
+            );
+        }
+    });
+}
 
 requestAnimationFrame(() => {
     chart.updateTree({
@@ -175,7 +199,9 @@ saveData(data);
 ------------------------------------------------------- */
 
 function getPerson(id) {
-    return data.find(person => String(person.id) === String(id));
+    return data.find(
+        person => String(person.id) === String(id)
+    );
 }
 
 function getFullName(person) {
@@ -234,7 +260,6 @@ function openModal(title, content) {
     const modal = document.createElement("div");
 
     modal.id = "appModal";
-
     modal.className = "modal-overlay";
 
     modal.innerHTML = `
@@ -261,7 +286,7 @@ function openModal(title, content) {
 
     document
         .getElementById("modalClose")
-        .addEventListener("click", closeModal);
+        ?.addEventListener("click", closeModal);
 
     modal.addEventListener("click", event => {
         if (event.target === modal) {
@@ -365,10 +390,11 @@ function showPerson(id) {
     const relationshipHtml =
         relationships.length
             ? relationships
-                  .map(
-                      relationship => `
+                .map(
+                    relationship => `
                         <div class="relationship-row">
                             <span>${relationship.type}</span>
+
                             <strong>
                                 ${getFullName(
                                     relationship.person
@@ -376,8 +402,8 @@ function showPerson(id) {
                             </strong>
                         </div>
                     `
-                  )
-                  .join("")
+                )
+                .join("")
             : `
                 <div class="empty-state">
                     No relationships recorded.
@@ -391,6 +417,7 @@ function showPerson(id) {
 
                 <div class="detail-card">
                     <span>Birthday</span>
+
                     <strong>
                         ${person.data?.birthday || "—"}
                     </strong>
@@ -398,6 +425,7 @@ function showPerson(id) {
 
                 <div class="detail-card">
                     <span>Gender</span>
+
                     <strong>
                         ${person.data?.gender || "—"}
                     </strong>
@@ -439,6 +467,7 @@ function showRelationships() {
 
                     <div class="relationship-person">
                         <span>👤</span>
+
                         <strong>
                             ${getFullName(person)}
                         </strong>
@@ -450,6 +479,7 @@ function showRelationships() {
 
                     <div class="relationship-person">
                         <span>👤</span>
+
                         <strong>
                             ${getFullName(
                                 relationship.person
@@ -505,7 +535,8 @@ function resetFamily() {
 function resetView() {
     try {
         chart.updateTree({
-            initial: true
+            initial: true,
+            tree_position: "fit"
         });
     } catch (error) {
         console.error(
@@ -522,6 +553,23 @@ function resetView() {
 ------------------------------------------------------- */
 
 function exportFamily() {
+    try {
+        if (typeof editTree.exportData === "function") {
+            const exported = editTree.exportData();
+
+            if (Array.isArray(exported)) {
+                data = exported;
+            }
+        }
+    } catch (error) {
+        console.warn(
+            "Could not get current editor data. Exporting local data instead.",
+            error
+        );
+    }
+
+    saveData(data);
+
     const blob = new Blob(
         [JSON.stringify(data, null, 2)],
         {
@@ -673,9 +721,7 @@ const sidebar =
     document.querySelector(".sidebar");
 
 const sidebarOverlay =
-    document.getElementById(
-        "sidebarOverlay"
-    );
+    document.getElementById("sidebarOverlay");
 
 function closeSidebar() {
     sidebar?.classList.remove(
@@ -719,16 +765,24 @@ document
             }
         );
     });
+
 let resizeTimer;
 
 window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
 
     resizeTimer = setTimeout(() => {
-        chart.updateTree({
-            tree_position: "fit",
-            transition_time: 300
-        });
+        try {
+            chart.updateTree({
+                tree_position: "fit",
+                transition_time: 300
+            });
+        } catch (error) {
+            console.warn(
+                "Tree resize update failed:",
+                error
+            );
+        }
     }, 200);
 });
 
