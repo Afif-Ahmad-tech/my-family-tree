@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#070c12"
+    >
+
+    <meta
+        name="color-scheme"
+        content="dark"
+    >
+
+    <title>Family Tree</title>
+
+    <link
+        rel="stylesheet"
+        href="./assets/family-chart.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="./style.css"
+    >
+
+</head>
+
+<body>
+
+    <svg
+        class="icon-sprite"
+        aria-hidden="true"
+        focusable="false"
+    >
+        <symbol id="i-tree" viewBox="0 0 24 24">
+            <rect x="9" y="3" width="6" height="5" rx="1.5" />
+            <path d="M12 8v3" />
+            <path d="M5.5 16v-2.5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2V16" />
+            <rect x="3" y="16" width="5" height="5" rx="1.5" />
+            <rect x="16" y="16" width="5" height="5" rx="1.5" />
+        </symbol>
+
+        <symbol id="i-users" viewBox="0 0 24 24">
+            <circle cx="9" cy="8" r="3.2" />
+            <path d="M3 19.5a6 6 0 0 1 12 0" />
+            <path d="M16 5.4a3.2 3.2 0 0 1 0 6.2" />
+            <path d="M18.4 14.6a6 6 0 0 1 2.6 4.9" />
+        </symbol>
+
+        <symbol id="i-user" viewBox="0 0 24 24">
+            <circle cx="12" cy="8" r="3.6" />
+            <path d="M4.5 20a7.5 7.5 0 0 1 15 0" />
+        </symbol>
+
+        <symbol id="i-link" viewBox="0 0 24 24">
+            <path d="M10 13.5a4 4 0 0 0 5.7 0l2.4-2.4a4 4 0 1 0-5.7-5.7l-1 1" />
+            <path d="M14 10.5a4 4 0 0 0-5.7 0l-2.4 2.4a4 4 0 1 0 5.7 5.7l1-1" />
+        </symbol>
+
+        <symbol id="i-eye" viewBox="0 0 24 24">
+            <path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" />
+            <circle cx="12" cy="12" r="3" />
+        </symbol>
+
+        <symbol id="i-pencil" viewBox="0 0 24 24">
+            <path d="m4 20 4.6-1.1 9.7-9.7a2.1 2.1 0 0 0-3-3L5.6 15.9 4 20Z" />
+            <path d="m13.4 6.5 3 3" />
+        </symbol>
+
+        <symbol id="i-fit" viewBox="0 0 24 24">
+            <path d="M4 9V5.5A1.5 1.5 0 0 1 5.5 4H9" />
+            <path d="M20 15v3.5a1.5 1.5 0 0 1-1.5 1.5H15" />
+            <path d="M15 4h3.5A1.5 1.5 0 0 1 20 5.5V9" />
+            <path d="M9 20H5.5A1.5 1.5 0 0 1 4 18.5V15" />
+        </symbol>
+
+        <symbol id="i-refresh" viewBox="0 0 24 24">
+            <path d="M20 12a8 8 0 1 1-2.35-5.65" />
+            <path d="M20 4v5h-5" />
+        </symbol>
+
+        <symbol id="i-download" viewBox="0 0 24 24">
+            <path d="M12 4v10" />
+            <path d="m8 11 4 4 4-4" />
+            <path d="M5 19h14" />
+        </symbol>
+
+        <symbol id="i-upload" viewBox="0 0 24 24">
+            <path d="M12 15V5" />
+            <path d="m8 8 4-4 4 4" />
+            <path d="M5 19h14" />
+        </symbol>
+
+        <symbol id="i-camera" viewBox="0 0 24 24">
+            <path d="M4 8.5A1.5 1.5 0 0 1 5.5 7h2l1.2-2h6.6L16.5 7h2A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5Z" />
+            <circle cx="12" cy="13" r="3.2" />
+        </symbol>
+
+        <symbol id="i-menu" viewBox="0 0 24 24">
+            <path d="M4 7h16" />
+            <path d="M4 12h16" />
+            <path d="M4 17h16" />
+        </symbol>
+
+        <symbol id="i-close" viewBox="0 0 24 24">
+            <path d="m6 6 12 12" />
+            <path d="M18 6 6 18" />
+        </symbol>
+
+        <symbol id="i-chevron" viewBox="0 0 24 24">
+            <path d="m9.5 6 6 6-6 6" />
+        </symbol>
+    </svg>
+
+
+    <header class="topbar">
+
+        <div class="brand">
+
+            <button
+                class="mobile-menu"
+                id="menuBtn"
+                type="button"
+                aria-label="Open menu"
+                aria-controls="appSidebar"
+                aria-expanded="false"
+            >
+                <svg class="app-icon" aria-hidden="true"><use href="#i-menu" /></svg>
+            </button>
+
+            <div class="brand-icon">
+                <svg class="app-icon" aria-hidden="true"><use href="#i-tree" /></svg>
+            </div>
+
+            <div class="brand-text">
+
+                <div class="brand-line">
+
+                    <h1>Family Tree</h1>
+
+                    <span
+                        class="mode-badge"
+                        id="modeBadge"
+                        data-mode="view"
+                    >
+                        View only
+                    </span>
+
+                </div>
+
+                <span class="brand-sub">Explore your family history</span>
+
+            </div>
+
+        </div>
+
+        <div class="toolbar">
+
+            <button
+                class="toolbar-button"
+                id="exportBtn"
+                type="button"
+            >
+                <svg class="app-icon" aria-hidden="true"><use href="#i-download" /></svg>
+                <span>Export</span>
+            </button>
+
+            <button
+                class="toolbar-button"
+                id="importBtn"
+                type="button"
+            >
+                <svg class="app-icon" aria-hidden="true"><use href="#i-upload" /></svg>
+                <span>Import</span>
+            </button>
+
+            <input
+                type="file"
+                id="importInput"
+                accept=".json,application/json"
+                hidden
+            >
+
+        </div>
+
+    </header>
+
+
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+    ></div>
+
+
+    <main class="app-layout">
+
+        <aside
+            class="sidebar"
+            id="appSidebar"
+            aria-label="Family tree controls"
+        >
+
+            <section class="sidebar-section">
+
+                <h2 class="sidebar-title">
+                    Mode
+                </h2>
+
+                <div
+                    class="mode-switch"
+                    id="modeSwitch"
+                    data-mode="view"
+                    role="group"
+                    aria-label="Editing mode"
+                >
+
+                    <button
+                        class="mode-btn is-active"
+                        id="modeView"
+                        type="button"
+                        aria-pressed="true"
+                    >
+                        <svg class="app-icon" aria-hidden="true"><use href="#i-eye" /></svg>
+                        <span>View</span>
+                    </button>
+
+                    <button
+                        class="mode-btn"
+                        id="modeEdit"
+                        type="button"
+                        aria-pressed="false"
+                    >
+                        <svg class="app-icon" aria-hidden="true"><use href="#i-pencil" /></svg>
+                        <span>Edit</span>
+                    </button>
+
+                </div>
+
+                <p class="sidebar-hint" id="modeHint">
+                    Click a person to see their details.
+                </p>
+
+            </section>
+
+
+            <section class="sidebar-section">
+
+                <h2 class="sidebar-title">
+                    Explore
+                </h2>
+
+                <button
+                    class="sidebar-item is-active"
+                    id="navFamily"
+                    type="button"
+                >
+                    <svg class="app-icon" aria-hidden="true"><use href="#i-tree" /></svg>
+                    <span>Family tree</span>
+                </button>
+
+                <button
+                    class="sidebar-item"
+                    id="navPeople"
+                    type="button"
+                >
+                    <svg class="app-icon" aria-hidden="true"><use href="#i-users" /></svg>
+                    <span>People</span>
+                    <span class="sidebar-count" id="peopleCount">0</span>
+                </button>
+
+                <button
+                    class="sidebar-item"
+                    id="navRelationships"
+                    type="button"
+                >
+                    <svg class="app-icon" aria-hidden="true"><use href="#i-link" /></svg>
+                    <span>Relationships</span>
+                </button>
+
+            </section>
+
+
+            <section class="sidebar-section">
+
+                <h2 class="sidebar-title">
+                    Actions
+                </h2>
+
+                <button
+                    class="sidebar-item"
+                    id="sidebarReset"
+                    type="button"
+                >
+                    <svg class="app-icon" aria-hidden="true"><use href="#i-fit" /></svg>
+                    <span>Fit to screen</span>
+                </button>
+
+                <button
+                    class="sidebar-item sidebar-item--danger"
+                    id="sidebarResetData"
+                    type="button"
+                >
+                    <svg class="app-icon" aria-hidden="true"><use href="#i-refresh" /></svg>
+                    <span>Reset to example</span>
+                </button>
+
+            </section>
+
+
+            <p class="sidebar-foot">
+                <span class="save-dot" aria-hidden="true"></span>
+                Changes save automatically
+            </p>
+
+        </aside>
+
+
+        <section class="workspace">
+
+            <p class="workspace-help" id="modeHelp">
+                Drag to pan · Scroll to zoom · Click a person
+            </p>
+
+            <div
+                id="FamilyChart"
+                class="f3 family-chart"
+            ></div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Dependencies -->
+    <script src="./assets/d3.min.js"></script>
+
+    <script src="./assets/family-chart.min.js"></script>
+
+    <script src="./app.js"></script>
+
+</body>
+
+</html>

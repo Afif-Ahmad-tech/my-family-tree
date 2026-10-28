@@ -1,7 +1,20 @@
 /dist/
+/site-dist/
 /node_modules/
 /.idea/
 /.vscode/
 /tests/debugging/
 cypress/screenshots
 docs/api
+
+# Local scratch, caches and agent/tool config
+/tmp/
+/run file.txt
+/.codex/
+/.gemini/
+/.grok/
+/.opencode/
+/.impeccable/
+*.log
+.DS_Store
+Thumbs.db

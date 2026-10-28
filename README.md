@@ -6,7 +6,6 @@
 [![MIT License][license-shield]][license-url]
 [![TypeScript][typescript-shield]][typescript-url]
 [![Bundle Size][bundle-shield]][bundle-url]
-[![Premium][premium-shield]][premium-url]
 
 <!-- PROJECT LOGO -->
 <br />
@@ -21,18 +20,6 @@
     Family Chart is a powerful D3.js-based visualization library for creating beautiful, interactive family trees.
   </p>
   
-</div>
-
-<!-- PREMIUM BANNER -->
-<div align="center">
-  <a href="https://github.com/donatso/family-chart-premium">
-    <img src="https://img.shields.io/badge/Family_Chart-PREMIUM_VERSION-f43f5e?style=for-the-badge&logo=github&logoColor=white" alt="Family Chart Premium">
-  </a>
-  <p>
-    <b>Looking for more power?</b> Check out <a href="https://github.com/donatso/family-chart-premium">Family Chart Premium</a> for advanced features:
-    <br />
-    <i>Kinship Engine • Tree Filtering • Advanced Card Variants • Performance Optimizations</i>
-  </p>
 </div>
 
 <hr />
@@ -146,7 +133,6 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 **Email**: [donatso.dev@gmail.com](mailto:donatso.dev@gmail.com)
 
 Project Link: [https://github.com/donatso/family-chart](https://github.com/donatso/family-chart)
-Premium Version: [https://github.com/donatso/family-chart-premium](https://github.com/donatso/family-chart-premium)
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
@@ -156,8 +142,6 @@ Premium Version: [https://github.com/donatso/family-chart-premium](https://githu
 [forks-url]: https://github.com/donatso/family-chart/network/members
 [stars-shield]: https://img.shields.io/github/stars/donatso/family-chart.svg?style=for-the-badge
 [stars-url]: https://github.com/donatso/family-chart/stargazers
-[premium-shield]: https://img.shields.io/badge/Premium-Available-f43f5e?style=for-the-badge
-[premium-url]: https://github.com/donatso/family-chart-premium
 [issues-shield]: https://img.shields.io/github/issues/donatso/family-chart.svg?style=for-the-badge
 [issues-url]: https://github.com/donatso/family-chart/issues
 [license-shield]: https://img.shields.io/github/license/donatso/family-chart.svg?style=for-the-badge

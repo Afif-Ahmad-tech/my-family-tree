@@ -12,214 +12,513 @@
 
     <meta
         name="theme-color"
-        content="#0b1017"
+        content="#070c12"
     >
 
-    <title>Family Tree</title>
+    <meta
+        name="color-scheme"
+        content="dark"
+    >
+
+    <meta
+        name="description"
+        content="Family Chart is a free, open-source family tree app and the D3 library behind it. Add relatives, explore the tree, and export a JSON backup. No account, no server."
+    >
+
+    <meta
+        property="og:title"
+        content="Family Chart — a family tree that stays in your browser"
+    >
+
+    <meta
+        property="og:description"
+        content="A private, local-first family tree app plus the framework-agnostic D3 library that powers it. Open source, MIT licensed."
+    >
+
+    <meta
+        property="og:type"
+        content="website"
+    >
+
+    <title>Family Chart — a family tree that stays in your browser</title>
 
     <link
         rel="stylesheet"
-        href="./assets/family-chart.css"
-    >
-
-    <link
-        rel="stylesheet"
-        href="./style.css"
+        href="./landing.css"
     >
 
 </head>
 
-<body>
+<body id="top">
 
-    <header class="topbar">
+    <a class="skip-link" href="#main">Skip to content</a>
 
-        <div class="brand">
+    <svg
+        class="icon-sprite"
+        aria-hidden="true"
+        focusable="false"
+    >
+        <symbol id="i-tree" viewBox="0 0 24 24">
+            <rect x="9" y="3" width="6" height="5" rx="1.5" />
+            <path d="M12 8v3" />
+            <path d="M5.5 16v-2.5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2V16" />
+            <rect x="3" y="16" width="5" height="5" rx="1.5" />
+            <rect x="16" y="16" width="5" height="5" rx="1.5" />
+        </symbol>
 
-            <button
-                class="mobile-menu"
-                id="menuBtn"
-                aria-label="Open menu"
-            >
-                ☰
-            </button>
+        <symbol id="i-move" viewBox="0 0 24 24">
+            <path d="M12 4v16" />
+            <path d="M4 12h16" />
+            <path d="m9 7 3-3 3 3" />
+            <path d="m9 17 3 3 3-3" />
+            <path d="m7 9-3 3 3 3" />
+            <path d="m17 9 3 3-3 3" />
+        </symbol>
 
-            <div class="brand-icon">
-                🌳
-            </div>
+        <symbol id="i-card" viewBox="0 0 24 24">
+            <rect x="3" y="4" width="18" height="16" rx="2.5" />
+            <path d="M7 9h6" />
+            <path d="M7 13h10" />
+            <path d="M7 17h4" />
+        </symbol>
 
-            <div class="brand-text">
-                <h1>Family Tree</h1>
-                <span>
-                    Explore your family history
+        <symbol id="i-add-person" viewBox="0 0 24 24">
+            <circle cx="10" cy="8" r="3.2" />
+            <path d="M4 19a6 6 0 0 1 12 0" />
+            <path d="M18 7v6" />
+            <path d="M15 10h6" />
+        </symbol>
+
+        <symbol id="i-code" viewBox="0 0 24 24">
+            <path d="m8 7-5 5 5 5" />
+            <path d="m16 7 5 5-5 5" />
+            <path d="m13.5 4-3 16" />
+        </symbol>
+
+        <symbol id="i-stack" viewBox="0 0 24 24">
+            <path d="m12 3 9 5-9 5-9-5 9-5Z" />
+            <path d="m3 13 9 5 9-5" />
+        </symbol>
+
+        <symbol id="i-palette" viewBox="0 0 24 24">
+            <path d="M12 3a9 9 0 1 0 0 18c1.7 0 2.5-1 2.5-2.2 0-1.4-1.2-1.8-1.2-3 0-1 .8-1.8 1.9-1.8H17a4 4 0 0 0 4-4C21 6 17 3 12 3Z" />
+            <circle cx="7.5" cy="11" r="1.1" fill="currentColor" stroke="none" />
+            <circle cx="10" cy="7.3" r="1.1" fill="currentColor" stroke="none" />
+            <circle cx="14.6" cy="7.3" r="1.1" fill="currentColor" stroke="none" />
+        </symbol>
+    </svg>
+
+
+    <header class="site-header">
+
+        <div class="wrap header-inner">
+
+            <a class="brand" href="#top">
+
+                <span class="brand-icon">
+                    <svg class="app-icon" aria-hidden="true"><use href="#i-tree" /></svg>
                 </span>
-            </div>
 
-        </div>
+                <span class="brand-name">Family Chart</span>
 
-        <div class="toolbar">
+            </a>
 
-            <button
-                class="toolbar-button"
-                id="resetBtn"
-            >
-                ↻ <span>Reset</span>
-            </button>
+            <nav class="site-nav" aria-label="Primary">
 
-            <button
-                class="toolbar-button"
-                id="exportBtn"
-            >
-                ↓ <span>Export</span>
-            </button>
+                <a href="#why">Why local</a>
+                <a href="#features">Features</a>
+                <a href="#start">Quick start</a>
 
-            <button
-                class="toolbar-button"
-                id="importBtn"
-            >
-                ↑ <span>Import</span>
-            </button>
+            </nav>
 
-            <input
-                type="file"
-                id="importInput"
-                accept=".json,application/json"
-                hidden
-            >
+            <a class="btn btn--primary" href="./app.html">
+                Open the app
+            </a>
 
         </div>
 
     </header>
 
 
-    <div
-        class="sidebar-overlay"
-        id="sidebarOverlay"
-    ></div>
+    <main id="main">
 
+        <section class="hero">
 
-    <main class="app-layout">
+            <div class="wrap hero-grid">
 
-        <aside class="sidebar">
+                <div class="hero-copy">
 
-            <section class="sidebar-section">
+                    <p class="eyebrow">
+                        <span class="eyebrow-dot" aria-hidden="true"></span>
+                        Open source · MIT · v0.9.0
+                    </p>
 
-                <h2 class="sidebar-title">
-                    FAMILY HISTORY
-                </h2>
+                    <h1>The family tree that never leaves your browser.</h1>
 
-                <div class="sidebar-card">
+                    <p class="lede">
+                        Family Chart is a free family tree app and the D3 library behind it.
+                        Add relatives, explore the tree, and export a plain JSON backup.
+                        There is no account to create and no server to trust.
+                    </p>
 
-                    <strong>
-                        Your Family
-                    </strong>
+                    <div class="hero-actions">
 
-                    <span>
-                        Explore generations,
-                        relationships and
-                        family connections.
-                    </span>
+                        <a class="btn btn--primary" href="./app.html">
+                            Open the family tree
+                        </a>
+
+                        <a
+                            class="btn btn--ghost"
+                            href="https://github.com/donatso/family-chart"
+                        >
+                            Get the library
+                        </a>
+
+                    </div>
+
+                    <ul class="hero-facts">
+                        <li>No accounts</li>
+                        <li>No tracking</li>
+                        <li>No server</li>
+                    </ul>
 
                 </div>
 
-            </section>
+
+                <figure class="hero-figure">
+
+                    <figcaption class="figure-bar">
+                        <span class="figure-live" aria-hidden="true"></span>
+                        Example family
+                        <span class="figure-tag">View only</span>
+                    </figcaption>
+
+                    <div
+                        class="tree-demo"
+                        role="img"
+                        aria-label="Example family tree: Jane and John Doe with their child, Michael Doe."
+                    >
+
+                        <div class="tree-pair">
+
+                            <div class="tree-card" data-gender="f">
+                                <span class="tree-avatar" aria-hidden="true">JD</span>
+                                <span class="tree-name">Jane Doe</span>
+                                <span class="tree-year">1952</span>
+                            </div>
+
+                            <span class="tree-link" aria-hidden="true"></span>
+
+                            <div class="tree-card is-focus" data-gender="m">
+                                <span class="tree-avatar" aria-hidden="true">JD</span>
+                                <span class="tree-name">John Doe</span>
+                                <span class="tree-year">1950</span>
+                            </div>
+
+                        </div>
+
+                        <span class="tree-stem" aria-hidden="true"></span>
+
+                        <div class="tree-card" data-gender="m">
+                            <span class="tree-avatar" aria-hidden="true">MD</span>
+                            <span class="tree-name">Michael Doe</span>
+                            <span class="tree-year">1978</span>
+                        </div>
+
+                    </div>
+
+                    <p class="figure-note">
+                        Drag to pan · Scroll to zoom · Click a person
+                    </p>
+
+                </figure>
+
+            </div>
+
+        </section>
 
 
-            <section class="sidebar-section">
+        <section class="section" id="why">
 
-                <h2 class="sidebar-title">
-                    NAVIGATION
-                </h2>
+            <div class="wrap">
 
-                <button
-                    class="sidebar-item active"
-                    id="navFamily"
-                >
-                    🌳
-                    <span>Family tree</span>
-                </button>
+                <div class="section-head">
 
-                <button
-                    class="sidebar-item"
-                    id="navPeople"
-                >
-                    👤
-                    <span>People</span>
-                </button>
+                    <p class="kicker">Why local</p>
 
-                <button
-                    class="sidebar-item"
-                    id="navRelationships"
-                >
-                    👨‍👩‍👧
-                    <span>Relationships</span>
-                </button>
+                    <h2>One rule: the data stays yours.</h2>
 
-            </section>
+                    <p class="section-sub">
+                        Most family tree services keep your relatives on their servers and ask
+                        you to trust them. This one keeps everything in the browser you are
+                        already using.
+                    </p>
 
-
-            <section class="sidebar-section">
-
-                <h2 class="sidebar-title">
-                    ACTIONS
-                </h2>
-
-                <button
-                    class="sidebar-item"
-                    id="sidebarReset"
-                >
-                    ↻
-                    <span>Reset view</span>
-                </button>
-
-            </section>
-
-        </aside>
-
-
-        <section class="workspace">
-
-            <div class="workspace-header">
-
-                <div>
-                    <span class="workspace-kicker">
-                        FAMILY TREE
-                    </span>
-
-                    <h2>
-                        Your family story
-                    </h2>
                 </div>
 
-                <div class="workspace-help">
-                    Drag to move · Scroll to zoom
+                <div class="props">
+
+                    <article class="prop">
+                        <h3>Private by default</h3>
+                        <p>
+                            The tree lives in this browser's local storage. There is no backend
+                            to sign into, no sync to configure, and nothing sent anywhere.
+                        </p>
+                    </article>
+
+                    <article class="prop">
+                        <h3>Look first, edit second</h3>
+                        <p>
+                            The tree fills the screen. Click a person to read their details and
+                            switch to Edit only when something needs correcting.
+                        </p>
+                    </article>
+
+                    <article class="prop">
+                        <h3>Yours to keep</h3>
+                        <p>
+                            Export writes the whole tree to a JSON file and Import reads it back
+                            on another machine. A plain file is the backup.
+                        </p>
+                    </article>
+
                 </div>
 
             </div>
 
+        </section>
 
-            <div
-                id="FamilyChart"
-                class="f3 family-chart"
-            ></div>
+
+        <section class="section" id="features">
+
+            <div class="wrap">
+
+                <div class="section-head">
+
+                    <p class="kicker">Features</p>
+
+                    <h2>A tree you can read, edit, and embed.</h2>
+
+                    <p class="section-sub">
+                        The app runs on the same published library that you can install into
+                        your own project.
+                    </p>
+
+                </div>
+
+                <div class="features">
+
+                    <article class="feature">
+                        <span class="feature-icon" aria-hidden="true">
+                            <svg class="app-icon"><use href="#i-move" /></svg>
+                        </span>
+                        <h3>Pan, zoom, focus</h3>
+                        <p>Drag the canvas, scroll to zoom, and click any card to make that person the centre of the tree.</p>
+                    </article>
+
+                    <article class="feature">
+                        <span class="feature-icon" aria-hidden="true">
+                            <svg class="app-icon"><use href="#i-card" /></svg>
+                        </span>
+                        <h3>HTML or SVG cards</h3>
+                        <p>Render cards as HTML for rich layouts or as SVG for crisp scaling, then choose which fields each card shows.</p>
+                    </article>
+
+                    <article class="feature">
+                        <span class="feature-icon" aria-hidden="true">
+                            <svg class="app-icon"><use href="#i-add-person" /></svg>
+                        </span>
+                        <h3>Add anyone</h3>
+                        <p>From a selected person, add a partner, child, or parent. Every edit has a visible way out.</p>
+                    </article>
+
+                    <article class="feature">
+                        <span class="feature-icon" aria-hidden="true">
+                            <svg class="app-icon"><use href="#i-code" /></svg>
+                        </span>
+                        <h3>TypeScript first</h3>
+                        <p>Typed entry points for <code>Chart</code>, <code>CardHtml</code>, and <code>EditTree</code>, with a generated TypeDoc reference.</p>
+                    </article>
+
+                    <article class="feature">
+                        <span class="feature-icon" aria-hidden="true">
+                            <svg class="app-icon"><use href="#i-stack" /></svg>
+                        </span>
+                        <h3>Framework agnostic</h3>
+                        <p>Use it with plain JavaScript, React, Vue, Angular, or Svelte. No wrapper package required.</p>
+                    </article>
+
+                    <article class="feature">
+                        <span class="feature-icon" aria-hidden="true">
+                            <svg class="app-icon"><use href="#i-palette" /></svg>
+                        </span>
+                        <h3>Style it your way</h3>
+                        <p>Cards, colours, and layout are configured through the public API and one stylesheet.</p>
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="section" id="start">
+
+            <div class="wrap">
+
+                <div class="section-head">
+
+                    <p class="kicker">Quick start</p>
+
+                    <h2>Two ways to start.</h2>
+
+                    <p class="section-sub">
+                        Open the app if you just want your own tree. Install the library if you
+                        are building a tree into something else.
+                    </p>
+
+                </div>
+
+                <div class="start-grid">
+
+                    <article class="start-card">
+
+                        <h3>Use the app</h3>
+
+                        <ol class="steps">
+
+                            <li>
+                                <span class="step-num" aria-hidden="true">1</span>
+                                <div>
+                                    <p class="step-title">Open the tree</p>
+                                    <p class="step-body">Start from the example family, then replace it with your own.</p>
+                                </div>
+                            </li>
+
+                            <li>
+                                <span class="step-num" aria-hidden="true">2</span>
+                                <div>
+                                    <p class="step-title">Add your people</p>
+                                    <p class="step-body">Pick a person, switch to Edit, and add a partner, child, or parent.</p>
+                                </div>
+                            </li>
+
+                            <li>
+                                <span class="step-num" aria-hidden="true">3</span>
+                                <div>
+                                    <p class="step-title">Keep a backup</p>
+                                    <p class="step-body">Export writes the whole tree to a JSON file you can import anywhere.</p>
+                                </div>
+                            </li>
+
+                        </ol>
+
+                        <a class="btn btn--primary" href="./app.html">Open the app</a>
+
+                    </article>
+
+                    <article class="start-card">
+
+                        <h3>Embed the library</h3>
+
+                        <p class="install">
+                            <span class="install-prompt" aria-hidden="true">$</span>
+                            <span>npm install family-chart d3</span>
+                        </p>
+
+                        <pre class="code"><code>import * as f3 from 'family-chart'
+import 'family-chart/dist/styles/family-chart.css'
+
+const chart = f3.createChart('#FamilyChart', data)
+  .setCardHtml()
+  .setCardDisplay([
+    ['first name', 'last name'],
+    ['birthday'],
+  ])
+
+chart.updateTree({ initial: true })</code></pre>
+
+                        <a
+                            class="text-link"
+                            href="https://github.com/donatso/family-chart/blob/master/docs/installation-and-quickstart.md"
+                        >
+                            Read the quick start
+                            <span aria-hidden="true">→</span>
+                        </a>
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="section section--cta">
+
+            <div class="wrap">
+
+                <div class="cta">
+
+                    <h2>Start with the example family. Make it yours.</h2>
+
+                    <p>
+                        Everything saves automatically in this browser. Export a JSON file
+                        whenever you want a copy.
+                    </p>
+
+                    <div class="cta-actions">
+
+                        <a class="btn btn--primary" href="./app.html">Open the family tree</a>
+
+                        <a
+                            class="btn btn--ghost"
+                            href="https://github.com/donatso/family-chart"
+                        >
+                            View the source
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
 
         </section>
 
     </main>
 
 
-    <footer class="footer">
-        <span>Family Tree</span>
-        <span>•</span>
-        <span>Powered by Family Chart</span>
+    <footer class="site-footer">
+
+        <div class="wrap footer-inner">
+
+            <div class="footer-brand">
+                <span class="brand-icon">
+                    <svg class="app-icon" aria-hidden="true"><use href="#i-tree" /></svg>
+                </span>
+                <p>Family Chart — a local-first family tree app and D3 library.</p>
+            </div>
+
+            <nav class="footer-nav" aria-label="Footer">
+
+                <a href="./app.html">App</a>
+                <a href="https://github.com/donatso/family-chart">GitHub</a>
+                <a href="https://donatso.github.io/family-chart/">Docs</a>
+                <a href="https://donatso.github.io/family-chart-doc/examples/">Examples</a>
+                <a href="https://github.com/donatso/family-chart/blob/master/LICENSE.txt">MIT license</a>
+
+            </nav>
+
+        </div>
+
+        <div class="wrap footer-note">
+            <p>No accounts, no server, no tracking. Example data is fictional.</p>
+        </div>
+
     </footer>
-
-
-    <!-- Dependencies -->
-    <script src="./assets/d3.min.js"></script>
-
-    <script src="./assets/family-chart.min.js"></script>
-
-    <script src="./app.js"></script>
 
 </body>
 

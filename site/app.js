@@ -110,12 +110,25 @@ function saveData(dataToSave) {
             STORAGE_KEY,
             JSON.stringify(dataToSave)
         );
+        saveFailed = false;
     } catch (error) {
         console.error("Could not save family tree:", error);
+
+        if (!saveFailed) {
+            saveFailed = true;
+
+            alert(
+                "Your family tree could not be saved in this browser " +
+                "(storage is full). Export a backup, then remove some " +
+                "photos or people."
+            );
+        }
     }
 }
 
 let data = loadData();
+
+let saveFailed = false;
 
 if (!window.f3) {
     throw new Error(
@@ -134,10 +147,15 @@ const chart = f3
 const card = chart
     .setCardHtml()
     .setCardDisplay([
-        ["first name", "last name"],
-        ["birthday"]
+        person => esc(
+            [person.data["first name"], person.data["last name"]]
+                .filter(Boolean)
+                .join(" ")
+        ),
+        person => esc(person.data.birthday)
     ])
-    .setCardImageField("image");
+    .setCardImageField("image")
+    .setStyle("imageCircleRect");
 
 /*
  * Family Chart's EditTree is responsible for the actual
@@ -153,12 +171,388 @@ const editTree = chart
         "first name",
         "last name",
         "birthday",
-        "gender"
-    ]);
+        "image"
+    ])
+    .setEditFirst(true);
+    /* -------------------------------------------------------
+   PHOTO UPLOAD FOR FAMILY MEMBERS
+------------------------------------------------------- */
 
-if (typeof editTree.setCardClickOpen === "function") {
-    editTree.setCardClickOpen(card);
+function compressImage(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onload = event => {
+            const img = new Image();
+
+            img.onload = () => {
+                const MAX_SIZE = 800;
+
+                let width = img.width;
+                let height = img.height;
+
+                if (width > height && width > MAX_SIZE) {
+                    height = Math.round(
+                        height * MAX_SIZE / width
+                    );
+                    width = MAX_SIZE;
+                } else if (height > MAX_SIZE) {
+                    width = Math.round(
+                        width * MAX_SIZE / height
+                    );
+                    height = MAX_SIZE;
+                }
+
+                const canvas =
+                    document.createElement("canvas");
+
+                canvas.width = width;
+                canvas.height = height;
+
+                const ctx =
+                    canvas.getContext("2d");
+
+                ctx.drawImage(
+                    img,
+                    0,
+                    0,
+                    width,
+                    height
+                );
+
+                resolve(
+                    canvas.toDataURL(
+                        "image/jpeg",
+                        0.8
+                    )
+                );
+            };
+
+            img.onerror = reject;
+            img.src = event.target.result;
+        };
+
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
 }
+
+
+function setPhotoButtonLabel(button, hasPhoto) {
+    button.innerHTML =
+        `<svg class="app-icon" aria-hidden="true"><use href="#i-camera"/></svg>` +
+        `<span>${hasPhoto ? "Change photo" : "Choose photo"}</span>`;
+}
+
+
+function setupPhotoUpload() {
+    const inputs =
+        document.querySelectorAll("input");
+
+    inputs.forEach(input => {
+
+        if (
+            input.dataset.photoEnhanced === "true"
+        ) {
+            return;
+        }
+
+        const name =
+            (
+                input.name ||
+                input.getAttribute("name") ||
+                ""
+            ).toLowerCase();
+
+        if (name !== "image") {
+            return;
+        }
+
+        input.dataset.photoEnhanced = "true";
+
+        /* Keep the original text field hidden */
+        input.style.display = "none";
+
+        const container =
+            document.createElement("div");
+
+        container.className =
+            "photo-upload-container";
+
+        const preview =
+            document.createElement("img");
+
+        preview.className =
+            "photo-upload-preview";
+
+        preview.alt =
+            "Person photo";
+
+        if (input.value) {
+            preview.src = input.value;
+            preview.style.display = "block";
+        } else {
+            preview.style.display = "none";
+        }
+
+        const button =
+            document.createElement("button");
+
+        button.type = "button";
+        button.className =
+            "photo-upload-button";
+
+        setPhotoButtonLabel(button, Boolean(input.value));
+
+        const fileInput =
+            document.createElement("input");
+
+        fileInput.type = "file";
+        fileInput.accept =
+            "image/jpeg,image/png,image/webp";
+
+        fileInput.style.display = "none";
+
+        button.addEventListener(
+            "click",
+            () => fileInput.click()
+        );
+
+        fileInput.addEventListener(
+            "change",
+            async () => {
+
+                const file =
+                    fileInput.files?.[0];
+
+                if (!file) {
+                    return;
+                }
+
+                if (!file.type.startsWith("image/")) {
+                    alert(
+                        "Please select an image file."
+                    );
+                    return;
+                }
+
+                try {
+
+                    const imageData =
+                        await compressImage(file);
+
+                    /*
+                     * Put the actual image data into
+                     * Family Chart's original image
+                     * field.
+                     */
+                    input.value = imageData;
+
+                    input.dispatchEvent(
+                        new Event(
+                            "input",
+                            {
+                                bubbles: true
+                            }
+                        )
+                    );
+
+                    input.dispatchEvent(
+                        new Event(
+                            "change",
+                            {
+                                bubbles: true
+                            }
+                        )
+                    );
+
+                    preview.src = imageData;
+                    preview.style.display =
+                        "block";
+
+                    setPhotoButtonLabel(button, true);
+
+                } catch (error) {
+
+                    console.error(
+                        "Photo processing failed:",
+                        error
+                    );
+
+                    alert(
+                        "Could not process this photo."
+                    );
+                }
+            }
+        );
+
+        container.appendChild(preview);
+        container.appendChild(button);
+        container.appendChild(fileInput);
+
+        input.parentElement?.appendChild(
+            container
+        );
+    });
+}
+
+
+/*
+ * Family Chart creates its edit form dynamically,
+ * so watch for the form appearing.
+ */
+const photoObserver =
+    new MutationObserver(() => {
+        setupPhotoUpload();
+    });
+
+photoObserver.observe(
+    document.body,
+    {
+        childList: true,
+        subtree: true
+    }
+);
+
+setupPhotoUpload();
+
+/* -------------------------------------------------------
+   VIEW / EDIT MODE
+   View is the default: a card click opens a read-only
+   profile. Edit hands the click to Family Chart's editor.
+------------------------------------------------------- */
+
+let mode = null;
+
+card.setOnCardClick((event, datum) => {
+    if (mode === "edit") {
+        editTree.open(datum.data);
+        card.onCardClickDefault(event, datum);
+    } else {
+        showPerson(datum.data.id);
+    }
+});
+
+function setMode(next) {
+    const previous = mode;
+
+    mode = next === "edit" ? "edit" : "view";
+
+    const editing = mode === "edit";
+
+    document.body.classList.toggle("mode-edit", editing);
+
+    const modeSwitch = document.getElementById("modeSwitch");
+    const modeView = document.getElementById("modeView");
+    const modeEdit = document.getElementById("modeEdit");
+
+    modeSwitch?.setAttribute("data-mode", mode);
+
+    modeView?.classList.toggle("is-active", !editing);
+    modeEdit?.classList.toggle("is-active", editing);
+
+    modeView?.setAttribute("aria-pressed", String(!editing));
+    modeEdit?.setAttribute("aria-pressed", String(editing));
+
+    const badge = document.getElementById("modeBadge");
+
+    if (badge) {
+        badge.textContent = editing ? "Editing" : "View only";
+        badge.setAttribute("data-mode", mode);
+    }
+
+    const hint = document.getElementById("modeHint");
+
+    if (hint) {
+        hint.textContent = editing
+            ? "Click a person to change their details."
+            : "Click a person to see their details.";
+    }
+
+    const help = document.getElementById("modeHelp");
+
+    if (help) {
+        help.textContent = helpLabel(editing);
+    }
+
+    if (editing) {
+        try {
+            editTree.openFormWithId(chart.getMainDatum()?.id);
+        } catch (error) {
+            console.warn("Could not open the edit panel:", error);
+        }
+
+        refitAfterPanel();
+    } else if (previous === "edit") {
+        if (editTree.isAddingRelative?.()) {
+            editTree.addRelativeInstance.onCancel?.();
+        }
+
+        if (editTree.isRemovingRelative?.()) {
+            editTree.removeRelativeInstance.onCancel?.();
+        }
+
+        editTree.closeForm();
+
+        refitAfterPanel();
+    }
+}
+
+/*
+ * The edit panel takes real width from the chart, so give
+ * the width transition time to finish before refitting.
+ */
+function refitAfterPanel() {
+    if (isMobileEditPanel()) {
+        return;
+    }
+
+    setTimeout(() => {
+        try {
+            chart.updateTree(initialTreePosition());
+        } catch (error) {
+            console.warn("Could not refit the tree:", error);
+        }
+    }, 360);
+}
+
+function initialTreePosition() {
+    if (window.innerWidth > 800) return { tree_position: "fit" };
+
+    // Keep phone cards readable while fitting as much of the tree as possible.
+    const fit = (window.innerWidth - 24) / chart.store.getTree().dim.width;
+
+    return {
+        tree_position: "main_to_middle",
+        scale: Math.max(0.65, Math.min(1, fit))
+    };
+}
+
+function helpLabel(editing) {
+    if (window.innerWidth <= 800) {
+        return editing ? "Tap a person to edit" : "Drag to pan · Tap a person";
+    }
+
+    return editing
+        ? "Editing — click a person to open their details"
+        : "Drag to pan · Scroll to zoom · Click a person";
+}
+
+document
+    .getElementById("modeView")
+    ?.addEventListener("click", () => {
+        setMode("view");
+        closeSidebar();
+    });
+
+document
+    .getElementById("modeEdit")
+    ?.addEventListener("click", () => {
+        setMode("edit");
+        closeSidebar();
+    });
+
+setMode("view");
 
 /*
  * Keep our local copy synchronized when EditTree exposes
@@ -186,10 +580,11 @@ if (typeof editTree.setOnChange === "function") {
 }
 
 requestAnimationFrame(() => {
-    chart.updateTree({
-        initial: true,
-        tree_position: "fit"
-    });
+    chart.updateTree({ initial: true });
+
+    if (window.innerWidth <= 800) {
+        chart.updateTree(initialTreePosition());
+    }
 });
 
 saveData(data);
@@ -215,6 +610,26 @@ function getFullName(person) {
     ]
         .filter(Boolean)
         .join(" ");
+}
+
+function genderLabel(gender) {
+    if (gender === "M") return "Male";
+    if (gender === "F") return "Female";
+
+    return gender || "—";
+}
+
+function esc(value) {
+    return String(value ?? "").replace(
+        /[&<>"']/g,
+        char => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        }[char])
+    );
 }
 
 function getRelationships(person) {
@@ -265,14 +680,14 @@ function openModal(title, content) {
     modal.innerHTML = `
         <div class="modal">
             <div class="modal-header">
-                <h2>${title}</h2>
+                <h2>${esc(title)}</h2>
 
                 <button
                     class="modal-close"
                     id="modalClose"
                     aria-label="Close"
                 >
-                    ×
+                    <svg class="app-icon" aria-hidden="true"><use href="#i-close" /></svg>
                 </button>
             </div>
 
@@ -333,18 +748,24 @@ function showPeople() {
             return `
                 <button
                     class="person-row"
-                    data-person-id="${person.id}"
+                    data-person-id="${esc(person.id)}"
                 >
-                    <div class="person-avatar">
-                        ${gender === "F" ? "👩" : "👨"}
+                    <div class="person-avatar ${
+                        gender === "F"
+                            ? "is-female"
+                            : gender === "M"
+                                ? "is-male"
+                                : ""
+                    }">
+                        <svg class="app-icon" aria-hidden="true"><use href="#i-user" /></svg>
                     </div>
 
                     <div class="person-info">
-                        <strong>${name}</strong>
-                        <span>${birthday}</span>
+                        <strong>${esc(name)}</strong>
+                        <span>${esc(birthday)}</span>
                     </div>
 
-                    <span class="person-arrow">›</span>
+                    <svg class="person-arrow app-icon app-icon--sm" aria-hidden="true"><use href="#i-chevron" /></svg>
                 </button>
             `;
         })
@@ -396,9 +817,9 @@ function showPerson(id) {
                             <span>${relationship.type}</span>
 
                             <strong>
-                                ${getFullName(
+                                ${esc(getFullName(
                                     relationship.person
-                                )}
+                                ))}
                             </strong>
                         </div>
                     `
@@ -419,7 +840,7 @@ function showPerson(id) {
                     <span>Birthday</span>
 
                     <strong>
-                        ${person.data?.birthday || "—"}
+                        ${esc(person.data?.birthday || "—")}
                     </strong>
                 </div>
 
@@ -427,7 +848,7 @@ function showPerson(id) {
                     <span>Gender</span>
 
                     <strong>
-                        ${person.data?.gender || "—"}
+                        ${esc(genderLabel(person.data?.gender))}
                     </strong>
                 </div>
 
@@ -454,8 +875,8 @@ function showRelationships() {
             getRelationships(person);
 
         relationships.forEach(relationship => {
+            // Each link is stored on both people; keep one row per pair.
             if (
-                relationship.type === "Spouse" &&
                 String(person.id) >
                     String(relationship.person.id)
             ) {
@@ -466,10 +887,10 @@ function showRelationships() {
                 <div class="relationship-card">
 
                     <div class="relationship-person">
-                        <span>👤</span>
+                        <svg class="app-icon app-icon--sm" aria-hidden="true"><use href="#i-user" /></svg>
 
                         <strong>
-                            ${getFullName(person)}
+                            ${esc(getFullName(person))}
                         </strong>
                     </div>
 
@@ -478,12 +899,12 @@ function showRelationships() {
                     </div>
 
                     <div class="relationship-person">
-                        <span>👤</span>
+                        <svg class="app-icon app-icon--sm" aria-hidden="true"><use href="#i-user" /></svg>
 
                         <strong>
-                            ${getFullName(
+                            ${esc(getFullName(
                                 relationship.person
-                            )}
+                            ))}
                         </strong>
                     </div>
 
@@ -534,10 +955,7 @@ function resetFamily() {
 
 function resetView() {
     try {
-        chart.updateTree({
-            initial: true,
-            tree_position: "fit"
-        });
+        chart.updateTree(initialTreePosition());
     } catch (error) {
         console.error(
             "Could not reset tree view:",
@@ -617,10 +1035,16 @@ async function importFamily(event) {
 
         if (
             !Array.isArray(importedData) ||
-            importedData.length === 0
+            importedData.length === 0 ||
+            importedData.some(
+                person =>
+                    !person ||
+                    typeof person !== "object" ||
+                    person.id === undefined
+            )
         ) {
             throw new Error(
-                "Family tree data must be a non-empty array."
+                "Family tree data must be a non-empty array of people with ids."
             );
         }
 
@@ -648,7 +1072,7 @@ async function importFamily(event) {
 ------------------------------------------------------- */
 
 document
-    .getElementById("resetBtn")
+    .getElementById("sidebarResetData")
     ?.addEventListener(
         "click",
         resetFamily
@@ -685,6 +1109,28 @@ document
         "click",
         resetView
     );
+
+const peopleCount = document.getElementById("peopleCount");
+
+if (peopleCount) {
+    peopleCount.textContent = String(data.length);
+}
+
+document.addEventListener("keydown", event => {
+    if (event.key !== "Escape") return;
+    if (document.getElementById("appModal")) return;
+
+    if (mode === "edit") {
+        editTree.closeForm();
+        refitAfterPanel();
+    }
+});
+
+document.addEventListener("click", event => {
+    if (event.target.closest?.(".f3-close-btn")) {
+        refitAfterPanel();
+    }
+});
 
 document
     .getElementById("navFamily")
@@ -743,6 +1189,11 @@ menuButton?.addEventListener(
         sidebarOverlay?.classList.toggle(
             "overlay-visible"
         );
+
+        menuButton.setAttribute(
+            "aria-expanded",
+            String(sidebar?.classList.contains("sidebar-open"))
+        );
     }
 );
 
@@ -772,9 +1223,17 @@ window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
 
     resizeTimer = setTimeout(() => {
+        const help = document.getElementById("modeHelp");
+
+        if (help) {
+            help.textContent = helpLabel(mode === "edit");
+        }
+
+        if (isMobileEditPanel()) return;
+
         try {
             chart.updateTree({
-                tree_position: "fit",
+                ...initialTreePosition(),
                 transition_time: 300
             });
         } catch (error) {
@@ -785,6 +1244,10 @@ window.addEventListener("resize", () => {
         }
     }, 200);
 });
+
+function isMobileEditPanel() {
+    return document.body.classList.contains("mode-edit") && window.innerWidth <= 800;
+}
 
 window.addEventListener(
     "resize",
